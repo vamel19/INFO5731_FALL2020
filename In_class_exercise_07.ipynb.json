@@ -1,0 +1,440 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# **The seventh in-class-exercise (20 points in total, 10/21/2020)**"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Question description: In the last in-class-exercise (exercise-06), you collected the titles of 100 articles about data science, natural language processing, and machine learning. The 100 article titles will be used as the text corpus of this exercise. Perform the following tasks:"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## (1) (8 points) Generate K topics by using LDA, the number of topics K should be decided by the coherence score, then summarize what are the topics. You may refer the code here: \n",
+    "\n",
+    "https://www.machinelearningplus.com/nlp/topic-modeling-gensim-python/"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Write your code here\n",
+    "import pandas as pd"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "   Understanding big data: Analytics for enterprise class hadoop and streaming data\n",
+      "0   Big data analytics in healthcare: promise and ...                              \n",
+      "1                                  Big data analytics                              \n",
+      "2                        Trends in big data analytics                              \n",
+      "3   Deep learning applications and challenges in b...                              \n",
+      "4    An introduction to social network data analytics                              \n",
+      "..                                                ...                              \n",
+      "94  What can big data and text analytics tell us a...                              \n",
+      "95  Convex optimization for big data: Scalable, ra...                              \n",
+      "96  Modeling and optimization for big data analyti...                              \n",
+      "97  Leveraging big data analytics to reduce health...                              \n",
+      "98       Bluedbm: An appliance for big data analytics                              \n",
+      "\n",
+      "[99 rows x 1 columns]\n"
+     ]
+    }
+   ],
+   "source": [
+    "df = pd.read_csv(\"Titles.csv\")\n",
+    "\n",
+    "print(df)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "SyntaxError",
+     "evalue": "invalid syntax (<ipython-input-18-25b4fa76927e>, line 5)",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;36m  File \u001b[0;32m\"<ipython-input-18-25b4fa76927e>\"\u001b[0;36m, line \u001b[0;32m5\u001b[0m\n\u001b[0;31m    python3 -m spacy download en\u001b[0m\n\u001b[0m               ^\u001b[0m\n\u001b[0;31mSyntaxError\u001b[0m\u001b[0;31m:\u001b[0m invalid syntax\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Run in python console\n",
+    "import nltk; nltk.download('stopwords')\n",
+    "\n",
+    "# Run in terminal or command prompt\n",
+    "python3 -m spacy download en"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "ModuleNotFoundError",
+     "evalue": "No module named 'gensim'",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[0;31mModuleNotFoundError\u001b[0m                       Traceback (most recent call last)",
+      "\u001b[0;32m<ipython-input-19-b98705f8e282>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m\u001b[0m\n\u001b[1;32m      5\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      6\u001b[0m \u001b[0;31m# Gensim\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----> 7\u001b[0;31m \u001b[0;32mimport\u001b[0m \u001b[0mgensim\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      8\u001b[0m \u001b[0;32mimport\u001b[0m \u001b[0mgensim\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mcorpora\u001b[0m \u001b[0;32mas\u001b[0m \u001b[0mcorpora\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      9\u001b[0m \u001b[0;32mfrom\u001b[0m \u001b[0mgensim\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mutils\u001b[0m \u001b[0;32mimport\u001b[0m \u001b[0msimple_preprocess\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;31mModuleNotFoundError\u001b[0m: No module named 'gensim'"
+     ]
+    }
+   ],
+   "source": [
+    "import re\n",
+    "import numpy as np\n",
+    "import pandas as pd\n",
+    "from pprint import pprint\n",
+    "\n",
+    "# Gensim\n",
+    "import gensim\n",
+    "import gensim.corpora as corpora\n",
+    "from gensim.utils import simple_preprocess\n",
+    "from gensim.models import CoherenceModel\n",
+    "\n",
+    "# spacy for lemmatization\n",
+    "import spacy\n",
+    "\n",
+    "# Plotting tools\n",
+    "import pyLDAvis\n",
+    "import pyLDAvis.gensim  # don't skip this\n",
+    "import matplotlib.pyplot as plt\n",
+    "%matplotlib inline\n",
+    "\n",
+    "# Enable logging for gensim - optional\n",
+    "import logging\n",
+    "logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.ERROR)\n",
+    "\n",
+    "import warnings\n",
+    "warnings.filterwarnings(\"ignore\",category=DeprecationWarning)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "LookupError",
+     "evalue": "\n**********************************************************************\n  Resource \u001b[93mstopwords\u001b[0m not found.\n  Please use the NLTK Downloader to obtain the resource:\n\n  \u001b[31m>>> import nltk\n  >>> nltk.download('stopwords')\n  \u001b[0m\n  For more information see: https://www.nltk.org/data.html\n\n  Attempted to load \u001b[93mcorpora/stopwords\u001b[0m\n\n  Searched in:\n    - '/Users/melissavang/nltk_data'\n    - '/opt/anaconda3/nltk_data'\n    - '/opt/anaconda3/share/nltk_data'\n    - '/opt/anaconda3/lib/nltk_data'\n    - '/usr/share/nltk_data'\n    - '/usr/local/share/nltk_data'\n    - '/usr/lib/nltk_data'\n    - '/usr/local/lib/nltk_data'\n**********************************************************************\n",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[0;31mLookupError\u001b[0m                               Traceback (most recent call last)",
+      "\u001b[0;32m/opt/anaconda3/lib/python3.8/site-packages/nltk/corpus/util.py\u001b[0m in \u001b[0;36m__load\u001b[0;34m(self)\u001b[0m\n\u001b[1;32m     82\u001b[0m                 \u001b[0;32mtry\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m---> 83\u001b[0;31m                     \u001b[0mroot\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mnltk\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mdata\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mfind\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m\"{}/{}\"\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mformat\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0msubdir\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mzip_name\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m     84\u001b[0m                 \u001b[0;32mexcept\u001b[0m \u001b[0mLookupError\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m/opt/anaconda3/lib/python3.8/site-packages/nltk/data.py\u001b[0m in \u001b[0;36mfind\u001b[0;34m(resource_name, paths)\u001b[0m\n\u001b[1;32m    584\u001b[0m     \u001b[0mresource_not_found\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;34m\"\\n%s\\n%s\\n%s\\n\"\u001b[0m \u001b[0;34m%\u001b[0m \u001b[0;34m(\u001b[0m\u001b[0msep\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mmsg\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0msep\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 585\u001b[0;31m     \u001b[0;32mraise\u001b[0m \u001b[0mLookupError\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mresource_not_found\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    586\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;31mLookupError\u001b[0m: \n**********************************************************************\n  Resource \u001b[93mstopwords\u001b[0m not found.\n  Please use the NLTK Downloader to obtain the resource:\n\n  \u001b[31m>>> import nltk\n  >>> nltk.download('stopwords')\n  \u001b[0m\n  For more information see: https://www.nltk.org/data.html\n\n  Attempted to load \u001b[93mcorpora/stopwords.zip/stopwords/\u001b[0m\n\n  Searched in:\n    - '/Users/melissavang/nltk_data'\n    - '/opt/anaconda3/nltk_data'\n    - '/opt/anaconda3/share/nltk_data'\n    - '/opt/anaconda3/lib/nltk_data'\n    - '/usr/share/nltk_data'\n    - '/usr/local/share/nltk_data'\n    - '/usr/lib/nltk_data'\n    - '/usr/local/lib/nltk_data'\n**********************************************************************\n",
+      "\nDuring handling of the above exception, another exception occurred:\n",
+      "\u001b[0;31mLookupError\u001b[0m                               Traceback (most recent call last)",
+      "\u001b[0;32m<ipython-input-20-e823496d40c9>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m\u001b[0m\n\u001b[1;32m      1\u001b[0m \u001b[0;31m# NLTK Stop words\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      2\u001b[0m \u001b[0;32mfrom\u001b[0m \u001b[0mnltk\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mcorpus\u001b[0m \u001b[0;32mimport\u001b[0m \u001b[0mstopwords\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----> 3\u001b[0;31m \u001b[0mstop_words\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mstopwords\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mwords\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m'english'\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      4\u001b[0m \u001b[0mstop_words\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mextend\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0;34m'from'\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m'subject'\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m're'\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m'edu'\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m'use'\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m/opt/anaconda3/lib/python3.8/site-packages/nltk/corpus/util.py\u001b[0m in \u001b[0;36m__getattr__\u001b[0;34m(self, attr)\u001b[0m\n\u001b[1;32m    118\u001b[0m             \u001b[0;32mraise\u001b[0m \u001b[0mAttributeError\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m\"LazyCorpusLoader object has no attribute '__bases__'\"\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    119\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 120\u001b[0;31m         \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m__load\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    121\u001b[0m         \u001b[0;31m# This looks circular, but its not, since __load() changes our\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    122\u001b[0m         \u001b[0;31m# __class__ to something new:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m/opt/anaconda3/lib/python3.8/site-packages/nltk/corpus/util.py\u001b[0m in \u001b[0;36m__load\u001b[0;34m(self)\u001b[0m\n\u001b[1;32m     83\u001b[0m                     \u001b[0mroot\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mnltk\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mdata\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mfind\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m\"{}/{}\"\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mformat\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0msubdir\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mzip_name\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     84\u001b[0m                 \u001b[0;32mexcept\u001b[0m \u001b[0mLookupError\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m---> 85\u001b[0;31m                     \u001b[0;32mraise\u001b[0m \u001b[0me\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m     86\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     87\u001b[0m         \u001b[0;31m# Load the corpus.\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m/opt/anaconda3/lib/python3.8/site-packages/nltk/corpus/util.py\u001b[0m in \u001b[0;36m__load\u001b[0;34m(self)\u001b[0m\n\u001b[1;32m     78\u001b[0m         \u001b[0;32melse\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     79\u001b[0m             \u001b[0;32mtry\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m---> 80\u001b[0;31m                 \u001b[0mroot\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mnltk\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mdata\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mfind\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m\"{}/{}\"\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mformat\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0msubdir\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m__name\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m     81\u001b[0m             \u001b[0;32mexcept\u001b[0m \u001b[0mLookupError\u001b[0m \u001b[0;32mas\u001b[0m \u001b[0me\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     82\u001b[0m                 \u001b[0;32mtry\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m/opt/anaconda3/lib/python3.8/site-packages/nltk/data.py\u001b[0m in \u001b[0;36mfind\u001b[0;34m(resource_name, paths)\u001b[0m\n\u001b[1;32m    583\u001b[0m     \u001b[0msep\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;34m\"*\"\u001b[0m \u001b[0;34m*\u001b[0m \u001b[0;36m70\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    584\u001b[0m     \u001b[0mresource_not_found\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;34m\"\\n%s\\n%s\\n%s\\n\"\u001b[0m \u001b[0;34m%\u001b[0m \u001b[0;34m(\u001b[0m\u001b[0msep\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mmsg\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0msep\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 585\u001b[0;31m     \u001b[0;32mraise\u001b[0m \u001b[0mLookupError\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mresource_not_found\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    586\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    587\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;31mLookupError\u001b[0m: \n**********************************************************************\n  Resource \u001b[93mstopwords\u001b[0m not found.\n  Please use the NLTK Downloader to obtain the resource:\n\n  \u001b[31m>>> import nltk\n  >>> nltk.download('stopwords')\n  \u001b[0m\n  For more information see: https://www.nltk.org/data.html\n\n  Attempted to load \u001b[93mcorpora/stopwords\u001b[0m\n\n  Searched in:\n    - '/Users/melissavang/nltk_data'\n    - '/opt/anaconda3/nltk_data'\n    - '/opt/anaconda3/share/nltk_data'\n    - '/opt/anaconda3/lib/nltk_data'\n    - '/usr/share/nltk_data'\n    - '/usr/local/share/nltk_data'\n    - '/usr/lib/nltk_data'\n    - '/usr/local/lib/nltk_data'\n**********************************************************************\n"
+     ]
+    }
+   ],
+   "source": [
+    "# NLTK Stop words\n",
+    "from nltk.corpus import stopwords\n",
+    "stop_words = stopwords.words('english')\n",
+    "stop_words.extend(['from', 'subject', 're', 'edu', 'use'])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "ValueError",
+     "evalue": "Expected object or value",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[0;31mValueError\u001b[0m                                Traceback (most recent call last)",
+      "\u001b[0;32m<ipython-input-23-7cdba92eaef1>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m\u001b[0m\n\u001b[1;32m      1\u001b[0m \u001b[0;31m# Import Dataset\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----> 2\u001b[0;31m \u001b[0mdf\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mpd\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mread_json\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m'https://github.com/vamel19/INFO5731_FALL2020/blob/master/Titles.csv'\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      3\u001b[0m \u001b[0mprint\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mdf\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mtarget_names\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0munique\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      4\u001b[0m \u001b[0mdf\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mhead\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m/opt/anaconda3/lib/python3.8/site-packages/pandas/util/_decorators.py\u001b[0m in \u001b[0;36mwrapper\u001b[0;34m(*args, **kwargs)\u001b[0m\n\u001b[1;32m    212\u001b[0m                 \u001b[0;32melse\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    213\u001b[0m                     \u001b[0mkwargs\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0mnew_arg_name\u001b[0m\u001b[0;34m]\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mnew_arg_value\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 214\u001b[0;31m             \u001b[0;32mreturn\u001b[0m \u001b[0mfunc\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m*\u001b[0m\u001b[0margs\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m**\u001b[0m\u001b[0mkwargs\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    215\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    216\u001b[0m         \u001b[0;32mreturn\u001b[0m \u001b[0mcast\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mF\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mwrapper\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m/opt/anaconda3/lib/python3.8/site-packages/pandas/io/json/_json.py\u001b[0m in \u001b[0;36mread_json\u001b[0;34m(path_or_buf, orient, typ, dtype, convert_axes, convert_dates, keep_default_dates, numpy, precise_float, date_unit, encoding, lines, chunksize, compression)\u001b[0m\n\u001b[1;32m    606\u001b[0m         \u001b[0;32mreturn\u001b[0m \u001b[0mjson_reader\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    607\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 608\u001b[0;31m     \u001b[0mresult\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mjson_reader\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mread\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    609\u001b[0m     \u001b[0;32mif\u001b[0m \u001b[0mshould_close\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    610\u001b[0m         \u001b[0mfilepath_or_buffer\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mclose\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m/opt/anaconda3/lib/python3.8/site-packages/pandas/io/json/_json.py\u001b[0m in \u001b[0;36mread\u001b[0;34m(self)\u001b[0m\n\u001b[1;32m    729\u001b[0m             \u001b[0mobj\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_get_object_parser\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_combine_lines\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mdata\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0msplit\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m\"\\n\"\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    730\u001b[0m         \u001b[0;32melse\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 731\u001b[0;31m             \u001b[0mobj\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_get_object_parser\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mdata\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    732\u001b[0m         \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mclose\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    733\u001b[0m         \u001b[0;32mreturn\u001b[0m \u001b[0mobj\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m/opt/anaconda3/lib/python3.8/site-packages/pandas/io/json/_json.py\u001b[0m in \u001b[0;36m_get_object_parser\u001b[0;34m(self, json)\u001b[0m\n\u001b[1;32m    751\u001b[0m         \u001b[0mobj\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;32mNone\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    752\u001b[0m         \u001b[0;32mif\u001b[0m \u001b[0mtyp\u001b[0m \u001b[0;34m==\u001b[0m \u001b[0;34m\"frame\"\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 753\u001b[0;31m             \u001b[0mobj\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mFrameParser\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mjson\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m**\u001b[0m\u001b[0mkwargs\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mparse\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    754\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    755\u001b[0m         \u001b[0;32mif\u001b[0m \u001b[0mtyp\u001b[0m \u001b[0;34m==\u001b[0m \u001b[0;34m\"series\"\u001b[0m \u001b[0;32mor\u001b[0m \u001b[0mobj\u001b[0m \u001b[0;32mis\u001b[0m \u001b[0;32mNone\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m/opt/anaconda3/lib/python3.8/site-packages/pandas/io/json/_json.py\u001b[0m in \u001b[0;36mparse\u001b[0;34m(self)\u001b[0m\n\u001b[1;32m    855\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    856\u001b[0m         \u001b[0;32melse\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 857\u001b[0;31m             \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_parse_no_numpy\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    858\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    859\u001b[0m         \u001b[0;32mif\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mobj\u001b[0m \u001b[0;32mis\u001b[0m \u001b[0;32mNone\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m/opt/anaconda3/lib/python3.8/site-packages/pandas/io/json/_json.py\u001b[0m in \u001b[0;36m_parse_no_numpy\u001b[0;34m(self)\u001b[0m\n\u001b[1;32m   1087\u001b[0m         \u001b[0;32mif\u001b[0m \u001b[0morient\u001b[0m \u001b[0;34m==\u001b[0m \u001b[0;34m\"columns\"\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1088\u001b[0m             self.obj = DataFrame(\n\u001b[0;32m-> 1089\u001b[0;31m                 \u001b[0mloads\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mjson\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mprecise_float\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mprecise_float\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mdtype\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;32mNone\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m   1090\u001b[0m             )\n\u001b[1;32m   1091\u001b[0m         \u001b[0;32melif\u001b[0m \u001b[0morient\u001b[0m \u001b[0;34m==\u001b[0m \u001b[0;34m\"split\"\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;31mValueError\u001b[0m: Expected object or value"
+     ]
+    }
+   ],
+   "source": [
+    "# Import Dataset\n",
+    "df = pd.read_json('https://github.com/vamel19/INFO5731_FALL2020/blob/master/Titles.csv')\n",
+    "print(df.target_names.unique())\n",
+    "df.head()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## (2) (8 points) Generate K topics by using LSA, the number of topics K should be decided by the coherence score, then summarize what are the topics. You may refer the code here:\n",
+    "\n",
+    "https://www.datacamp.com/community/tutorials/discovering-hidden-topics-python"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "ModuleNotFoundError",
+     "evalue": "No module named 'gensim'",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[0;31mModuleNotFoundError\u001b[0m                       Traceback (most recent call last)",
+      "\u001b[0;32m<ipython-input-16-da5e4e592a4f>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m\u001b[0m\n\u001b[1;32m      1\u001b[0m \u001b[0;31m#import modules\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      2\u001b[0m \u001b[0;32mimport\u001b[0m \u001b[0mos\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mpath\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----> 3\u001b[0;31m \u001b[0;32mfrom\u001b[0m \u001b[0mgensim\u001b[0m \u001b[0;32mimport\u001b[0m \u001b[0mcorpora\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      4\u001b[0m \u001b[0;32mfrom\u001b[0m \u001b[0mgensim\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mmodels\u001b[0m \u001b[0;32mimport\u001b[0m \u001b[0mLsiModel\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      5\u001b[0m \u001b[0;32mfrom\u001b[0m \u001b[0mnltk\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mtokenize\u001b[0m \u001b[0;32mimport\u001b[0m \u001b[0mRegexpTokenizer\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;31mModuleNotFoundError\u001b[0m: No module named 'gensim'"
+     ]
+    }
+   ],
+   "source": [
+    "#import modules\n",
+    "import os.path\n",
+    "from gensim import corpora\n",
+    "from gensim.models import LsiModel\n",
+    "from nltk.tokenize import RegexpTokenizer\n",
+    "from nltk.corpus import stopwords\n",
+    "from nltk.stem.porter import PorterStemmer\n",
+    "from gensim.models.coherencemodel import CoherenceModel\n",
+    "import matplotlib.pyplot as plt"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def load_data(path,file_name):\n",
+    "    \"\"\"\n",
+    "    Input  : path and file_name\n",
+    "    Purpose: loading text file\n",
+    "    Output : list of paragraphs/documents and\n",
+    "             title(initial 100 words considred as title of document)\n",
+    "    \"\"\"\n",
+    "    documents_list = []\n",
+    "    titles=[]\n",
+    "    with open( os.path.join(path, file_name) ,\"r\") as fin:\n",
+    "        for line in fin.readlines():\n",
+    "            text = line.strip()\n",
+    "            documents_list.append(text)\n",
+    "    print(\"Total Number of Documents:\",len(documents_list))\n",
+    "    titles.append( text[0:min(len(text),100)] )\n",
+    "    return documents_list,titles"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def preprocess_data(doc_set):\n",
+    "    \"\"\"\n",
+    "    Input  : docuemnt list\n",
+    "    Purpose: preprocess text (tokenize, removing stopwords, and stemming)\n",
+    "    Output : preprocessed text\n",
+    "    \"\"\"\n",
+    "    # initialize regex tokenizer\n",
+    "    tokenizer = RegexpTokenizer(r'\\w+')\n",
+    "    # create English stop words list\n",
+    "    en_stop = set(stopwords.words('english'))\n",
+    "    # Create p_stemmer of class PorterStemmer\n",
+    "    p_stemmer = PorterStemmer()\n",
+    "    # list for tokenized documents in loop\n",
+    "    texts = []\n",
+    "    # loop through document list\n",
+    "    for i in doc_set:\n",
+    "        # clean and tokenize document string\n",
+    "        raw = i.lower()\n",
+    "        tokens = tokenizer.tokenize(raw)\n",
+    "        # remove stop words from tokens\n",
+    "        stopped_tokens = [i for i in tokens if not i in en_stop]\n",
+    "        # stem tokens\n",
+    "        stemmed_tokens = [p_stemmer.stem(i) for i in stopped_tokens]\n",
+    "        # add tokens to list\n",
+    "        texts.append(stemmed_tokens)\n",
+    "    return texts"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def prepare_corpus(doc_clean):\n",
+    "    \"\"\"\n",
+    "    Input  : clean document\n",
+    "    Purpose: create term dictionary of our courpus and Converting list of documents (corpus) into Document Term Matrix\n",
+    "    Output : term dictionary and Document Term Matrix\n",
+    "    \"\"\"\n",
+    "    # Creating the term dictionary of our courpus, where every unique term is assigned an index. dictionary = corpora.Dictionary(doc_clean)\n",
+    "    dictionary = corpora.Dictionary(doc_clean)\n",
+    "    # Converting list of documents (corpus) into Document Term Matrix using dictionary prepared above.\n",
+    "    doc_term_matrix = [dictionary.doc2bow(doc) for doc in doc_clean]\n",
+    "    # generate LDA model\n",
+    "    return dictionary,doc_term_matrix"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def create_gensim_lsa_model(doc_clean,number_of_topics,words):\n",
+    "    \"\"\"\n",
+    "    Input  : clean document, number of topics and number of words associated with each topic\n",
+    "    Purpose: create LSA model using gensim\n",
+    "    Output : return LSA model\n",
+    "    \"\"\"\n",
+    "    dictionary,doc_term_matrix=prepare_corpus(doc_clean)\n",
+    "    # generate LSA model\n",
+    "    lsamodel = LsiModel(doc_term_matrix, num_topics=number_of_topics, id2word = dictionary)  # train model\n",
+    "    print(lsamodel.print_topics(num_topics=number_of_topics, num_words=words))\n",
+    "    return lsamodel"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def compute_coherence_values(dictionary, doc_term_matrix, doc_clean, stop, start=2, step=3):\n",
+    "    \"\"\"\n",
+    "    Input   : dictionary : Gensim dictionary\n",
+    "              corpus : Gensim corpus\n",
+    "              texts : List of input texts\n",
+    "              stop : Max num of topics\n",
+    "    purpose : Compute c_v coherence for various number of topics\n",
+    "    Output  : model_list : List of LSA topic models\n",
+    "              coherence_values : Coherence values corresponding to the LDA model with respective number of topics\n",
+    "    \"\"\"\n",
+    "    coherence_values = []\n",
+    "    model_list = []\n",
+    "    for num_topics in range(start, stop, step):\n",
+    "        # generate LSA model\n",
+    "        model = LsiModel(doc_term_matrix, num_topics=number_of_topics, id2word = dictionary)  # train model\n",
+    "        model_list.append(model)\n",
+    "        coherencemodel = CoherenceModel(model=model, texts=doc_clean, dictionary=dictionary, coherence='c_v')\n",
+    "        coherence_values.append(coherencemodel.get_coherence())\n",
+    "    return model_list, coherence_values"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def plot_graph(doc_clean,start, stop, step):\n",
+    "    dictionary,doc_term_matrix=prepare_corpus(doc_clean)\n",
+    "    model_list, coherence_values = compute_coherence_values(dictionary, doc_term_matrix,doc_clean,\n",
+    "                                                            stop, start, step)\n",
+    "    # Show graph\n",
+    "    x = range(start, stop, step)\n",
+    "    plt.plot(x, coherence_values)\n",
+    "    plt.xlabel(\"Number of Topics\")\n",
+    "    plt.ylabel(\"Coherence score\")\n",
+    "    plt.legend((\"coherence_values\"), loc='best')\n",
+    "    plt.show()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "NameError",
+     "evalue": "name 'clean_text' is not defined",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[0;31mNameError\u001b[0m                                 Traceback (most recent call last)",
+      "\u001b[0;32m<ipython-input-14-523db9e36454>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m\u001b[0m\n\u001b[1;32m      1\u001b[0m \u001b[0mstart\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0mstop\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0mstep\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;36m2\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;36m12\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;36m1\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----> 2\u001b[0;31m \u001b[0mplot_graph\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mclean_text\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0mstart\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0mstop\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0mstep\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m",
+      "\u001b[0;31mNameError\u001b[0m: name 'clean_text' is not defined"
+     ]
+    }
+   ],
+   "source": [
+    "start,stop,step=2,12,1\n",
+    "plot_graph(clean_text,start,stop,step)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## (3) (4 points) Compare the results generated by the two topic modeling algorithms, which one is better? You should explain the reasons in details."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "Comparing the results generated by the two topic modeling algorithms, both are used to compare classification of the titles. LSA has a lower accuracy."
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
